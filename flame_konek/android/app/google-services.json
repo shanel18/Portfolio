@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "799270338222",
+    "project_id": "flame-konek",
+    "storage_bucket": "flame-konek.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:799270338222:android:0135653606448e8fdf373f",
+        "android_client_info": {
+          "package_name": "com.example.flame_konek"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "799270338222-dtqhonv8sbb1ggdvmdgvk57qbgssdvst.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.flame_konek",
+            "certificate_hash": "de000c4c8c3eba8abaaa6a062c39e236ff1e5b83"
+          }
+        },
+        {
+          "client_id": "799270338222-pq163au8ijv0j1ptmloda1mol9rplf84.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCiJFqmB_P5bItIPQXqjAjVkdXqU5FHGo8"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "799270338222-pae32ut5f7b0j85p1lbi5avoc9va67ir.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
