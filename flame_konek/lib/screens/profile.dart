@@ -1,3 +1,4 @@
+import 'package:flame_konek/screens/home.dart';
 import 'package:flutter/material.dart';
 
 class ProfilePage extends StatefulWidget {
@@ -17,7 +18,7 @@ class _ProfilePageState extends State<ProfilePage> {
         backgroundColor: Colors.transparent,
         toolbarHeight: 60,
         elevation: 0.0,
-        title: const Text("Profile"),
+        title:  Text("${currentUser?.username}"),
         centerTitle: true,
         flexibleSpace: Container(
           decoration: const BoxDecoration(

@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:curved_navigation_bar/curved_navigation_bar.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flame_konek/models/account_setup_model.dart';
 import 'package:flame_konek/screens/account_setup.dart';
 import 'package:flame_konek/screens/post.dart';
@@ -13,11 +14,11 @@ import 'package:google_sign_in/google_sign_in.dart';
 import '../models/user.dart';
 import 'feed.dart';
 
-final GoogleSignIn googleSignIn = GoogleSignIn();
 final DateTime timestamp = DateTime.now();
 final usersReference = FirebaseFirestore.instance.collection('Users');
 
-User? currentUser;
+
+UserModel? currentUser;
 
 
 class Home extends StatefulWidget {
@@ -28,65 +29,37 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> {
-  bool isAuth = false;
+  
     late PageController pageController;
   int index = 0;
   
 
 
-  void login() async {
-    googleSignIn.signIn();
-
-    
-  }
+  
 
   @override
   void initState() {
     super.initState();
      pageController = PageController();
 
-    googleSignIn.onCurrentUserChanged.listen((account) {
-      handleSignIn(account);
-    }, onError: (err) {
-      print('Error signing in: $err');
-    });
+    createUserMethod();
 
-    googleSignIn.signInSilently(suppressErrors: false).then((account) {
-      handleSignIn(account);
-    }).catchError((err) {
-      print('Error Signing in: $err');
-    });
+   
   }
 
 
-
-  handleSignIn(GoogleSignInAccount? account) async {
-    if (account != null) {
-      await createUserMethod();
-      print(account);
-
-      setState(() {
-        isAuth = true;
-      });
-    } else {
-      setState(() {
-        isAuth = false;
-      });
-    }
-  }
-
-  createUserMethod() async {
-    final GoogleSignInAccount? user = googleSignIn.currentUser;
-    DocumentSnapshot documentSnapshot = await usersReference.doc(user?.id).get();
+   createUserMethod() async {
+    final user = FirebaseAuth.instance.currentUser;
+    DocumentSnapshot documentSnapshot = await usersReference.doc(user?.uid).get();
 
     if (!documentSnapshot.exists) {
       final AccountSetupArguments accountSetupArguments = await Navigator.push(
           context, MaterialPageRoute(builder: (context) => AccountSetup()));
-
-      usersReference.doc(user?.id).set({
-        "id": user?.id,
+    
+      usersReference.doc(user?.uid).set({
+        "id": user?.uid,
         "username": accountSetupArguments.someMapVariable["username"],
-        "photoUrl": user?.photoUrl,
+        "photoUrl": "",
         "email": user?.email,
         "displayName": user?.displayName,
         "bio": accountSetupArguments.someMapVariable["bio"],
@@ -94,18 +67,24 @@ class _HomeState extends State<Home> {
         "department": accountSetupArguments.someMapVariable["department"],
         "course": accountSetupArguments.someMapVariable["course"]
       });
-      documentSnapshot = await usersReference.doc(user?.id).get();
+      documentSnapshot = await usersReference.doc(user?.uid).get();
     }
 
-    currentUser = User.fromDocument(documentSnapshot);
+    currentUser = UserModel.fromDocument(documentSnapshot);
     print(currentUser);
     print(currentUser?.displayName);
   }
 
-  void signOut() {
-    googleSignIn.signOut();
+
+
+  
+
+  
+
+   void signOut() {
+   FirebaseAuth.instance.signOut();
     
-  }
+ }
 
     @override
   void dispose() {
@@ -219,36 +198,8 @@ class _HomeState extends State<Home> {
   }
 
   
-  
-  Widget login_page() {
-    return Scaffold(
-      
-      body: Center(
-        
-        child: Column(
-          
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-           Image.asset('assets/images/logo2.png', width: 150, height: 150,),
-           SizedBox(height: 80,),
-            
-            Text(
-              'Flame Konek',
-              style: TextStyle(fontSize: 24),
-            ),
-            SizedBox(height: 20),
-            ElevatedButton(
-              onPressed: login,
-              child: Text('Sign in with Google'),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-
   @override
   Widget build(BuildContext context) {
-    return isAuth ? openUser() : login_page();
+    return  openUser();
   }
 }
